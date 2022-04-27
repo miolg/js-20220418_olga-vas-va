@@ -5,11 +5,14 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-  if (param !== 'asc' && param !== 'desc') {
-    return new Error('sortStrings: the second parameter should be either \'asc\' or \'desc\'');
+  const direction = {
+    asc: 1,
+    desc: -1
+  };
+
+  if (!direction[param]) {
+    throw new Error('sortStrings: the second parameter is unknown');
   }
   
-  return arr.slice().sort((a, b) => {
-    return a.localeCompare(b, ['ru-RU', 'en-EN'], { caseFirst: 'upper' }) * (param === 'asc' ? 1 : -1);
-  });
+  return arr.slice().sort((a, b) => a.localeCompare(b, ['ru-RU', 'en-EN'], { caseFirst: 'upper' }) * direction[param]);
 }
