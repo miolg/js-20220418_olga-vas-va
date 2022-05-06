@@ -27,5 +27,5 @@ export function trimSymbols(string, size) {
     return result + current;
   }
 
-  return ((size !== 0) && string && [...string].reduce((prev, current) => checkSymbols(prev, current))) || '';
+  return (size !== 0 && string) ? [...string].reduce((prev, current) => checkSymbols(prev, current)) : '';
 }
