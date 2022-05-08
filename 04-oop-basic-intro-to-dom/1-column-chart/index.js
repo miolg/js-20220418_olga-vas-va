@@ -1,24 +1,33 @@
 export default class ColumnChart {
+  chartHeight = 50;
+
   constructor({ data = [], label = "", value = "", link = "", formatHeading = (val) => val } = {}) {
-    this.chartHeight = 50;
+    const wrapper = document.createElement('div');
 
-    this.element = document.createElement('div');
-    this.element.className = `column-chart${data.length ? '' : ' column-chart_loading'}`;
-    this.element.style = `--chart-height: ${this.chartHeight}`;
-
-    this.element.innerHTML = `
-      <div class="column-chart__title">
-        Total ${label}
-        ${link ? '<a class="column-chart__link" href="' + link + '">View all</a>' : ''}
-      </div>
-      <div class="column-chart__container">
-        <div data-element="header" class="column-chart__header">
-        ${formatHeading(value)}
+    wrapper.innerHTML = `
+      <div class="column-chart${data.length ? '' : ' column-chart_loading'}" --chart-height: ${this.chartHeight}>
+        <div class="column-chart__title">
+          Total ${label}
+          ${link ? '<a class="column-chart__link" href="' + link + '">View all</a>' : ''}
         </div>
+        <div class="column-chart__container">
+          <div data-element="header" class="column-chart__header">
+          ${formatHeading(value)}
+          </div>
+      </div>
+    `;
+
+    const chartWrapper = document.createElement('div');
+    chartWrapper.innerHTML = `
       <div data-element="body" class="column-chart__chart">
         ${this.createDataHTML(data)}
       </div>
     `;
+
+
+    this.element = wrapper.firstElementChild;
+    this.chart = chartWrapper.firstElementChild;
+    this.element.append(this.chart);
   }
 
   scaleData(data) {
@@ -43,7 +52,7 @@ export default class ColumnChart {
   }
 
   update(newData = []) {
-    this.element.querySelector('.column-chart__chart').innerHTML = this.createDataHTML(newData);
+    this.chart.innerHTML = this.createDataHTML(newData);
   }
 
   destroy() {
