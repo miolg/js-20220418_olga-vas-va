@@ -19,11 +19,11 @@ export default class NotificationMessage {
   }
 
   show(target = document.body) {
-    if (this.__proto__.activeInstance) {
-      this.__proto__.activeInstance.destroy();
+    if (Object.getPrototypeOf(this).activeInstance) {
+      Object.getPrototypeOf(this).activeInstance.destroy();
     }
 
-    this.__proto__.activeInstance = this;
+    Object.getPrototypeOf(this).activeInstance = this;
 
     setTimeout(() => {
       this.remove();
@@ -34,7 +34,7 @@ export default class NotificationMessage {
 
   destroy() {
     this.element.remove();
-    this.__proto__.activeInstance = undefined;
+    Object.getPrototypeOf(this).activeInstance = undefined;
   }
 
   remove() {
