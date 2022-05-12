@@ -1,4 +1,6 @@
 export default class NotificationMessage {
+  static activeInstance;
+
   constructor(message = "", { duration = 20, type = 'success' } = {}) {
     this.duration = duration;
 
@@ -19,13 +21,13 @@ export default class NotificationMessage {
   }
 
   show(target = document.body) {
-    if (Object.getPrototypeOf(this).activeInstance) {
-      Object.getPrototypeOf(this).activeInstance.destroy();
+    if (NotificationMessage.activeInstance) {
+      NotificationMessage.activeInstance.destroy();
     }
 
-    Object.getPrototypeOf(this).activeInstance = this;
+    NotificationMessage.activeInstance = this;
 
-    setTimeout(() => {
+    this.removeNotificationTimeout = setTimeout(() => {
       this.remove();
     }, this.duration);
 
@@ -34,7 +36,8 @@ export default class NotificationMessage {
 
   destroy() {
     this.element.remove();
-    Object.getPrototypeOf(this).activeInstance = undefined;
+    NotificationMessage.activeInstance = undefined;
+    clearTimeout(this.removeNotificationTimeout);
   }
 
   remove() {
