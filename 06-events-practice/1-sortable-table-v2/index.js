@@ -29,8 +29,6 @@ export default class SortableTable {
 
     if (this.sorted.id) {
       this.sort();
-    } else {
-      this.renderBodyData();
     }
 
     this.element = table;
@@ -45,20 +43,7 @@ export default class SortableTable {
     `;
 
     const header = headerWrapper.firstElementChild;
-    header.addEventListener('pointerdown', (event) => {
-      const target = event.target.closest('.sortable-table__cell');
-      if (!target || target.dataset.sortable === 'false') {
-        return;
-      }
-
-      if (this.sorted.id === target.dataset.id) {
-        this.sorted.order = this.sorted.order === 'asc' ? 'desc' : 'asc';
-      } else {
-        this.sorted.order = 'desc';
-      }
-      this.sorted.id = target.dataset.id;
-      this.sort();
-    });
+    header.addEventListener('pointerdown', this.sortHandler.bind(this));
 
     return header;
   }
@@ -74,6 +59,21 @@ export default class SortableTable {
     });
 
     return htmlString;
+  }
+
+  sortHandler(event) {
+    const target = event.target.closest('.sortable-table__cell');
+    if (!target || target.dataset.sortable === 'false') {
+      return;
+    }
+
+    if (this.sorted.id === target.dataset.id) {
+      this.sorted.order = this.sorted.order === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sorted.order = 'desc';
+    }
+    this.sorted.id = target.dataset.id;
+    this.sort();
   }
 
   buildArrow() {
@@ -164,5 +164,6 @@ export default class SortableTable {
 
   destroy() {
     this.element.remove();
+    this.subElements.header.removeEventListener('pointerdown', this.sortHandler);
   }
 }
