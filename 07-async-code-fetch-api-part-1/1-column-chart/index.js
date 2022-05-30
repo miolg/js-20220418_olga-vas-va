@@ -97,18 +97,20 @@ export default class ColumnChart {
     const value = Object.values(data).reduce((accumulator, value) => {
       return accumulator + value;
     }, 0);
-    this.subElements.body.innerHTML = this.createDataHTML(Object.values(data));
+    
+    this.subElements.body.innerHTML = this.createDataHTML(data);
     this.subElements.header.innerHTML = this.formatHeading(value);
   }
 
   scaleData(data) {
-    const maxValue = Math.max(...data);
+    const maxValue = Math.max(...Object.values(data));
     const scale = this.chartHeight / maxValue;
+    const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
   
-    return data.map(item => {
+    return Object.entries(data).map(([key, value]) => {
       return {
-        percent: (item / maxValue * 100).toFixed(0) + '%',
-        value: String(Math.floor(item * scale))
+        tooltip: `<div><small>${new Date(key).toLocaleDateString(['ru-RU', 'en-EN'], dateOptions)}</small></div><strong>${value}</strong>`,
+        value: String(Math.floor(value * scale))
       };
     });
   }
@@ -116,7 +118,7 @@ export default class ColumnChart {
   createDataHTML(data) {
     let dataHTML = "";
     this.scaleData(data).forEach((item) => {
-      dataHTML += `<div style="--value:${item.value}" data-tooltip="${item.percent}"></div>`;
+      dataHTML += `<div style="--value:${item.value}" data-tooltip="${item.tooltip}"></div>`;
     });
 
     return dataHTML;
