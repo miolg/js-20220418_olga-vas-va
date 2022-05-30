@@ -14,12 +14,12 @@ class Tooltip {
   }
 
   initialize () {
-    document.addEventListener('pointerover', this.show.bind(this));
-    document.addEventListener('pointerout', this.hide.bind(this));
-    document.addEventListener('mousemove', this.onMouseMove.bind(this));
+    document.addEventListener('pointerover', this.show);
+    document.addEventListener('pointerout', this.hide);
+    document.addEventListener('mousemove', this.onMouseMove);
   }
 
-  show({ target } = event) {
+  show = ({ target }) => {
     let tooltipText = target.dataset.tooltip;
     if (!tooltipText) {
       return;
@@ -33,7 +33,7 @@ class Tooltip {
     document.body.append(this.element);
   }
 
-  hide({ target } = event) {
+  hide = ({ target }) => {
     let tooltipText = target.dataset.tooltip;
     if (!tooltipText) {
       return;
@@ -43,7 +43,7 @@ class Tooltip {
     this.element.remove();
   }
 
-  onMouseMove({ target, offsetX, offsetY } = event) {
+  onMouseMove = ({ target, offsetX, offsetY }) => {
     let tooltipText = target.dataset.tooltip;
     if (!tooltipText) {
       return;
@@ -54,8 +54,8 @@ class Tooltip {
   }
 
   destroy() {
-    document.removeEventListener('pointerover', this.showTooltip);
-    document.removeEventListener('pointerout', this.hideTooltip);
+    document.removeEventListener('pointerover', this.show);
+    document.removeEventListener('pointerout', this.hide);
     document.removeEventListener('mousemove', this.onMouseMove);
     this.element.remove();
   }
