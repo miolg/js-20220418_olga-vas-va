@@ -83,14 +83,7 @@ export default class ColumnChart {
     if (this.range.from && this.range.to) {
       url += `?from=${this.range.from.toISOString()}&to=${this.range.to.toISOString()}`;
     }
-
-    let promise = await fetch(url);
-
-    if (promise.ok) {
-      data = await promise.json();
-    }
-
-    return data;
+    return await fetchJson(url);
   }
 
   updateChart(data) {
